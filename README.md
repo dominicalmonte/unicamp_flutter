@@ -47,3 +47,10 @@ UniCamp is built using the following technologies and plugins:
 | `carousel_slider`          | ^5.0.0      | Elegant carousel sliders for image display.                                |
 
 ---
+
+## **Screenshots** 💻  
+
+![Login](assets/screenshots/Login.png)
+![Main](assets/screenshots/Main.png)
+![Buildings](assets/screenshots/Buildings.png)
+![Details](assets/screenshots/Details.png)
