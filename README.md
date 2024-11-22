@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # flutter_unicamp
 
 A new Flutter project.
@@ -14,3 +15,6 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+=======
+# unicamp_flutter
+>>>>>>> 27cf733bcccf990a273f6cc979b1c31781221036
