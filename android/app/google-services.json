@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "227424076654",
+    "project_id": "unicamp-ad6f4",
+    "storage_bucket": "unicamp-ad6f4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:227424076654:android:8cf7a8e9c875b1a540777f",
+        "android_client_info": {
+          "package_name": "com.dknows.unicamp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "227424076654-n0pitktmor0h8r2d9nc8nf592fao66o6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhpJPpB62l0aoQ3ZvR1eiaAQDTxCvRsfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "227424076654-n0pitktmor0h8r2d9nc8nf592fao66o6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "227424076654-1onnk8bf7avn22ad0u23eqv1nkdjvco4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.flutterUnicamp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
