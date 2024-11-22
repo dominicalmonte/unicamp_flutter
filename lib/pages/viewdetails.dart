@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../components/cardbuildings.dart';
+import '../components/cardlocations.dart';  // Make sure this is imported
 import '../components/burger.dart';
 import '../components/searchfield.dart';
-import '../pages/viewdetails.dart'; // Import the viewdetails.dart page
 
-class BuildingsPage extends StatelessWidget {
-  const BuildingsPage({super.key});
+class ViewDetailsPage extends StatelessWidget {
+  final DocumentSnapshot building;
+
+  const ViewDetailsPage({super.key, required this.building});
 
   @override
   Widget build(BuildContext context) {
+    final buildingData = building.data() as Map<String, dynamic>; // Get building data as a Map
+    final buildingName = buildingData['Name'] ?? 'Unknown Name'; // Extract building name
+
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(100.0),
@@ -33,7 +37,10 @@ class BuildingsPage extends StatelessWidget {
       ),
       drawer: BurgerMenu.drawer(context),
       body: FutureBuilder<QuerySnapshot>(
-        future: FirebaseFirestore.instance.collection('Buildings').get(),
+        future: FirebaseFirestore.instance
+            .collection('Locations') // Fetch data from 'Locations' collection
+            .where('Building', isEqualTo: buildingName) // Compare with the building name (not DocumentSnapshot)
+            .get(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -43,10 +50,10 @@ class BuildingsPage extends StatelessWidget {
             );
           } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
             return const Center(
-              child: Text('No buildings found.'),
+              child: Text('No locations found for this building.'),
             );
           } else {
-            final buildings = snapshot.data!.docs;
+            final locations = snapshot.data!.docs;
 
             return SingleChildScrollView(
               child: Padding(
@@ -54,34 +61,19 @@ class BuildingsPage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(bottom: 8.0),
-                      child: Text(
-                        'Buildings',
-                        style: TextStyle(
-                          fontSize: 24.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue,
-                        ),
+                    Text(
+                      '$buildingName Locations',
+                      style: const TextStyle(
+                        fontSize: 24.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
                       ),
                     ),
-                    // Pass building data to BuildingCard and make it clickable
-                    ...buildings.map((building) {
-                      final data = building.data() as Map<String, dynamic>;
-                      final buildingName = data['Name'] ?? 'Unknown Name';
-
-                      return GestureDetector(
-                        onTap: () {
-                          // Pass the entire building document to ViewDetailsPage
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewDetailsPage(building: building), // Pass the whole building object here
-                            ),
-                          );
-                        },
-                        child: BuildingCard(data: data),
-                      );
+                    const SizedBox(height: 16.0),
+                    // Pass location data to LocationCard
+                    ...locations.map((location) {
+                      final data = location.data() as Map<String, dynamic>;
+                      return LocationCard(data: data);
                     }).toList(),
                   ],
                 ),
