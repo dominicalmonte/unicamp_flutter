@@ -1,47 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../components/cardbuildings.dart';
+import '../components/cardlocations.dart';
 import '../components/burger.dart';
 import '../components/searchfield.dart';
 import '../pages/viewdetails.dart'; // Import the viewdetails.dart page
 
-class BuildingsPage extends StatefulWidget {
-  const BuildingsPage({super.key});
+class LocationsPage extends StatefulWidget {
+  const LocationsPage({super.key});
 
   @override
-  State<BuildingsPage> createState() => _BuildingsPageState();
+  State<LocationsPage> createState() => _LocationsPageState();
 }
 
-class _BuildingsPageState extends State<BuildingsPage> {
-  List<QueryDocumentSnapshot> allBuildings = [];
-  List<QueryDocumentSnapshot> filteredBuildings = [];
+class _LocationsPageState extends State<LocationsPage> {
+  List<QueryDocumentSnapshot> allLocations = [];
+  List<QueryDocumentSnapshot> filteredLocations = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchBuildings();
+    _fetchLocations();
   }
 
-  Future<void> _fetchBuildings() async {
-    final snapshot = await FirebaseFirestore.instance.collection('Buildings').get();
+  Future<void> _fetchLocations() async {
+    final snapshot = await FirebaseFirestore.instance.collection('Locations').get();
     setState(() {
-      allBuildings = snapshot.docs;
-      filteredBuildings = allBuildings; // Initially show all buildings
+      allLocations = snapshot.docs;
+      filteredLocations = allLocations; // Initially show all locations
     });
   }
 
-  void _filterBuildings(String query) {
+  void _filterLocations(String query) {
     setState(() {
       if (query.isEmpty) {
-        filteredBuildings = allBuildings; // Show all if query is empty
+        filteredLocations = allLocations; // Show all if query is empty
       } else {
-        filteredBuildings = allBuildings.where((doc) {
+        filteredLocations = allLocations.where((doc) {
           final data = doc.data() as Map<String, dynamic>;
-          final buildingName = (data['Name'] ?? '').toLowerCase();
-          final locationLabel = (data['LocationLabel'] ?? '').toLowerCase(); // Assuming 'LocationLabel' is the field for locations
+          final locationName = (data['Name'] ?? '').toLowerCase(); // Location name
+          final buildingLabel = (data['BuildingLabel'] ?? '').toLowerCase(); // Associated building
 
-          return buildingName.contains(query.toLowerCase()) ||
-                 locationLabel.contains(query.toLowerCase()); // Check both name and location
+          return locationName.contains(query.toLowerCase()) ||
+                 buildingLabel.contains(query.toLowerCase()); // Check name and building
         }).toList();
       }
     });
@@ -65,7 +65,7 @@ class _BuildingsPageState extends State<BuildingsPage> {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 16.0, left: 4.0),
-                child: SearchField(onChanged: _filterBuildings), // Attach search callback
+                child: SearchField(onChanged: _filterLocations), // Attach search callback
               ),
             ],
           ),
@@ -97,7 +97,7 @@ class _BuildingsPageState extends State<BuildingsPage> {
                 const Padding(
                   padding: EdgeInsets.only(bottom: 8.0),
                   child: Text(
-                    'Buildings',
+                    'Locations',
                     style: TextStyle(
                       fontSize: 24.0,
                       fontWeight: FontWeight.bold,
@@ -107,25 +107,25 @@ class _BuildingsPageState extends State<BuildingsPage> {
                 ),
                 // List of buildings
                 Expanded(
-                  child: filteredBuildings.isEmpty
+                  child: filteredLocations.isEmpty
                       ? const Center(child: Text('No buildings found.', style: TextStyle(color: Colors.white)))
                       : ListView.builder(
-                          itemCount: filteredBuildings.length,
+                          itemCount: filteredLocations.length,
                           itemBuilder: (context, index) {
-                            final building = filteredBuildings[index];
-                            final data = building.data() as Map<String, dynamic>;
+                            final location = filteredLocations[index];
+                            final data = location.data() as Map<String, dynamic>;
                             return GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => ViewDetailsPage(building: building),
+                                    builder: (context) => ViewDetailsPage(building: location),
                                   ),
                                 );
                               },
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
-                                child: BuildingCard(data: data),
+                                child: LocationCard(data: data),
                               ),
                             );
                           },

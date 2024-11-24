@@ -32,7 +32,7 @@ class BuildingCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Carousel for PhotoURLs
-              if (photoURLs.isNotEmpty)
+              if (photoURLs.length > 1) // More than one image, use CarouselSlider
                 CarouselSlider(
                   options: CarouselOptions(
                     height: 170.0,
@@ -56,9 +56,18 @@ class BuildingCard extends StatelessWidget {
                     );
                   }).toList(),
                 )
-              else
-                const SizedBox.shrink(), // Fallback if no photos
-
+              else if (photoURLs.length == 1) // Only one image, display it directly
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(
+                    photoURLs.first,
+                    height: 200.0,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                )
+              else // No images available, fallback
+                const SizedBox.shrink(),
               const SizedBox(height: 16.0),
               // Name
               Text(

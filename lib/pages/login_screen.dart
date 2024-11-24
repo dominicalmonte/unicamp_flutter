@@ -83,13 +83,17 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       body: Stack(
         children: [
+          // Fixed background image layer
           Positioned.fill(
-            child: Opacity(
-              opacity: 0.7,
-              child: Image.asset(
-                "assets/Main Page.jpg",
-                fit: BoxFit.cover,
-              ),
+            child: Image.asset(
+              "assets/Main Page.jpg",
+              fit: BoxFit.cover,
+            ),
+          ),
+          // Optional semi-transparent overlay for better text visibility
+          Positioned.fill(
+            child: Container(
+              color: Colors.black.withOpacity(0.3),
             ),
           ),
           Center(

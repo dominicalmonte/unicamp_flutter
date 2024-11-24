@@ -25,7 +25,7 @@ class Homepage extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.only(right: 16.0, left: 4.0), 
-                child: const SearchField(),
+                
               ),
             ],
           ),

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart'; // Import provider for AuthProvider
 import '../auth_provider.dart'; // Import your AuthProvider
 import '../pages/homepage.dart';
 import '../pages/buildings.dart';
+import '../pages/locations.dart';
 
 class BurgerMenu extends StatelessWidget {
   const BurgerMenu({super.key});
@@ -68,9 +69,10 @@ class BurgerMenu extends StatelessWidget {
             context,
             icon: Icons.map,
             label: 'Locations',
-            onTap: () {
-              // Add routing for Locations here when implemented
-            },
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const LocationsPage()),
+            ),
           ),
           _buildDrawerItem(
             context,
