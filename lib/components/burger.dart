@@ -37,14 +37,10 @@ class BurgerMenu extends StatelessWidget {
                 ),
               ),
             ),
-            child: const Center(
-              child: Text(
-                'UniCamp',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+            child: Center(
+              child: Image.asset(
+                "assets/UniCampAlt.png",
+                height: MediaQuery.of(context).size.height * 0.125, // Dynamic sizing for logo
               ),
             ),
           ),

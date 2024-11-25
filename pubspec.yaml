@@ -38,3 +38,5 @@ flutter:
   # Add assets here
   assets:
     - assets/Main Page.jpg
+    - assets/UniCampLogo.png
+    - assets/UniCampAlt.png

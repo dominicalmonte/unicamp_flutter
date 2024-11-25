@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/auth_provider.dart' as localAuthProvider; // Alias for your custom provider
-import 'package:font_awesome_flutter/font_awesome_flutter.dart'; 
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -37,18 +37,17 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Google login
   Future<void> _loginWithGoogle(BuildContext context) async {
     setState(() {
       _isLoading = true;
     });
 
-    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false); // Use alias
+    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false);
     final error = await authProvider.loginWithGoogle();
 
     setState(() {
       _isLoading = false;
-      _errorMessage = error ?? ''; // Display error if present
+      _errorMessage = error ?? '';
     });
 
     if (error == null) {
@@ -56,7 +55,6 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
-  // Guest Login
   Future<void> _loginAsGuest(BuildContext context) async {
     setState(() {
       _isLoading = true;
@@ -67,11 +65,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       _isLoading = false;
-      _errorMessage = error ?? ''; // Display error if present
+      _errorMessage = error ?? '';
     });
 
     if (error == null) {
-      Navigator.pushReplacementNamed(context, '/home'); // Redirect after successful guest login
+      Navigator.pushReplacementNamed(context, '/home');
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_errorMessage)));
     }
@@ -79,18 +77,19 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final double screenHeight = MediaQuery.of(context).size.height;
+    final double logoHeight = screenHeight * 0.2; // Logo height is 20% of the screen height
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          // Fixed background image layer
           Positioned.fill(
             child: Image.asset(
               "assets/Main Page.jpg",
               fit: BoxFit.cover,
             ),
           ),
-          // Optional semi-transparent overlay for better text visibility
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.3),
@@ -103,119 +102,124 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Center(
-                      child: Container(
-                        padding: const EdgeInsets.all(24.0),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
+                    // App Logo
+                    Image.asset(
+                      "assets/UniCampLogo.png",
+                      height: MediaQuery.of(context).size.height * 0.1, // Dynamic sizing
+                    ),
+                    const SizedBox(height: 20),
+                    // Login Container
+                    Container(
+                      padding: const EdgeInsets.all(24.0),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            blurRadius: 10,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(bottom: 16.0),
+                            child: Text(
+                              "Sign in",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF3D00A5),
+                              ),
                             ),
-                          ],
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.only(bottom: 16.0),
+                          ),
+                          TextField(
+                            controller: _emailController,
+                            decoration: InputDecoration(
+                              labelText: "Email",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          TextField(
+                            controller: _passwordController,
+                            obscureText: true,
+                            decoration: InputDecoration(
+                              labelText: "Password",
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          FractionallySizedBox(
+                            widthFactor: 0.6,
+                            child: ElevatedButton(
+                              onPressed: _isLoading ? null : () => _login(context),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: const Color(0xFF3D00A5),
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                              child: _isLoading
+                                  ? const CircularProgressIndicator(color: Colors.white)
+                                  : const Text("Login", style: TextStyle(color: Color(0xFFEEEEEE))),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          FractionallySizedBox(
+                            widthFactor: 0.6,
+                            child: OutlinedButton.icon(
+                              onPressed: _isLoading ? null : () => _loginWithGoogle(context),
+                              icon: const FaIcon(
+                                FontAwesomeIcons.google,
+                                color: Colors.red,
+                              ),
+                              label: const Text("Sign in with Google"),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+                          FractionallySizedBox(
+                            widthFactor: 0.6,
+                            child: OutlinedButton(
+                              onPressed: _isLoading ? null : () => _loginAsGuest(context),
+                              style: OutlinedButton.styleFrom(
+                                padding: const EdgeInsets.symmetric(vertical: 12),
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                side: BorderSide(color: Colors.grey.shade400),
+                              ),
+                              child: const Text(
+                                "Login as Guest",
+                                style: TextStyle(color: Colors.black54),
+                              ),
+                            ),
+                          ),
+                          if (_errorMessage.isNotEmpty)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
                               child: Text(
-                                "Sign in",
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF3D00A5),
-                                ),
+                                _errorMessage,
+                                style: const TextStyle(color: Colors.red),
                               ),
                             ),
-                            TextField(
-                              controller: _emailController,
-                              decoration: InputDecoration(
-                                labelText: "Email",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            TextField(
-                              controller: _passwordController,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                labelText: "Password",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12.0),
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            FractionallySizedBox(
-                              widthFactor: 0.6,
-                              child: ElevatedButton(
-                                onPressed: _isLoading ? null : () => _login(context),
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: const Color(0xFF3D00A5),
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                                child: _isLoading
-                                    ? const CircularProgressIndicator(color: Colors.white)
-                                    : const Text("Login", style: TextStyle(color: Color(0xFFEEEEEE))),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            FractionallySizedBox(
-                              widthFactor: 0.6,
-                              child: OutlinedButton.icon(
-                                onPressed: _isLoading ? null : () => _loginWithGoogle(context),
-                                icon: const FaIcon(
-                                  FontAwesomeIcons.google,
-                                  color: Colors.red,
-                                ),
-                                label: const Text("Sign in with Google"),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            FractionallySizedBox(
-                              widthFactor: 0.6,
-                              child: OutlinedButton(
-                                onPressed: _isLoading ? null : () => _loginAsGuest(context),
-                                style: OutlinedButton.styleFrom(
-                                  padding: const EdgeInsets.symmetric(vertical: 12),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  side: BorderSide(color: Colors.grey.shade400),
-                                ),
-                                child: const Text(
-                                  "Login as Guest",
-                                  style: TextStyle(color: Colors.black54),
-                                ),
-                              ),
-                            ),
-                            if (_errorMessage.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 16),
-                                child: Text(
-                                  _errorMessage,
-                                  style: const TextStyle(color: Colors.red),
-                                ),
-                              ),
-                          ],
-                        ),
+                        ],
                       ),
                     ),
                   ],

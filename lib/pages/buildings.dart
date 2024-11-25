@@ -80,34 +80,59 @@ class _BuildingsPageState extends State<BuildingsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Color(0xFF3D00A5)),
-            onPressed: () async {
-              final query = await showSearch(
-                context: context,
-                delegate: CustomSearchDelegate(
-                  previousSearches: previousSearches,
-                  onSearchSubmitted: (query) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _filterBuildings(query);
-                      if (query.isNotEmpty && !previousSearches.contains(query)) {
-                        previousSearches.add(query);
-                      }
-                    });
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80.0), // Keep dynamic height if needed
+        child: Padding(
+          padding: const EdgeInsets.only(top: 16.0, left:12.0),
+          child: AppBar(
+            automaticallyImplyLeading: false,
+            leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    size: MediaQuery.of(context).size.width * 0.08, // Dynamic size based on screen width
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                );
+              },
+            ),
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16.0),
+                child: IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    size: MediaQuery.of(context).size.width * 0.08,
+                    color: const Color(0xFF3D00A5), 
+                  ),
+                  onPressed: () async {
+                    final query = await showSearch(
+                      context: context,
+                      delegate: CustomSearchDelegate(
+                        previousSearches: previousSearches,
+                        onSearchSubmitted: (query) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            _filterBuildings(query);
+                            if (query.isNotEmpty && !previousSearches.contains(query)) {
+                              previousSearches.add(query);
+                            }
+                          });
+                        },
+                      ),
+                    );
+
+                    if (query != null) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _filterBuildings(query);
+                      });
+                    }
                   },
                 ),
-              );
-
-              if (query != null) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  _filterBuildings(query);
-                });
-              }
-            },
+              ),
+            ],
           ),
-        ],
+        ),
       ),
       drawer: BurgerMenu.drawer(context),
       body: Stack(
@@ -137,7 +162,7 @@ class _BuildingsPageState extends State<BuildingsPage> {
                   child: Text(
                     'Buildings',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 26.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
