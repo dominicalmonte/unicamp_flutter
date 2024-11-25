@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart'; // Import provider for AuthProvider
-import '../auth_provider.dart'; // Import your AuthProvider
-import '../pages/homepage.dart';
+import '../provider/auth_provider.dart'; // Import your AuthProvider
 import '../pages/buildings.dart';
 import '../pages/locations.dart';
 

@@ -1,23 +1,22 @@
-// lib/components/searchfield.dart
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SearchField extends StatelessWidget {
-  final ValueChanged<String> onChanged; // Add callback for text change
+  final ValueChanged<String> onChanged;
 
   const SearchField({super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: MediaQuery.of(context).size.width * 0.8,
-      height: 42,
+      width: MediaQuery.of(context).size.width * 0.8, // Adjusted width to be more flexible
+      height: MediaQuery.of(context).size.height * 0.055,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: Colors.orange.shade50,
       ),
       child: TextField(
-        onChanged: onChanged, // Trigger callback when text changes
+        onChanged: onChanged, 
         decoration: InputDecoration(
           hintText: 'Search...',
           hintStyle: TextStyle(color: Colors.orange.shade700),
@@ -26,7 +25,7 @@ class SearchField extends StatelessWidget {
           suffixIcon: Icon(
             FontAwesomeIcons.search,
             size: 16,
-            color: Colors.orange.shade700,
+            color: const Color(0xFF3D00A5),
           ),
         ),
       ),

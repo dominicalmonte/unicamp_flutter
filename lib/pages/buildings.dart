@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardbuildings.dart';
 import '../components/burger.dart';
-import '../components/searchfield.dart';
 import '../pages/viewdetails.dart'; // Import the viewdetails.dart page
+import '../components/search_delegate.dart'; // Import the SearchDelegate
 
 class BuildingsPage extends StatefulWidget {
   const BuildingsPage({super.key});
@@ -15,6 +15,7 @@ class BuildingsPage extends StatefulWidget {
 class _BuildingsPageState extends State<BuildingsPage> {
   List<QueryDocumentSnapshot> allBuildings = [];
   List<QueryDocumentSnapshot> filteredBuildings = [];
+  List<String> previousSearches = []; // To store previous search queries
 
   @override
   void initState() {
@@ -23,53 +24,90 @@ class _BuildingsPageState extends State<BuildingsPage> {
   }
 
   Future<void> _fetchBuildings() async {
-    final snapshot = await FirebaseFirestore.instance.collection('Buildings').get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('Buildings')
+        .orderBy('Name') // Ensure buildings are fetched alphabetically
+        .get();
+
     setState(() {
       allBuildings = snapshot.docs;
-      filteredBuildings = allBuildings; // Initially show all buildings
+      filteredBuildings = List.from(allBuildings); // Initially show all buildings in alphabetical order
     });
   }
 
   void _filterBuildings(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredBuildings = allBuildings; // Show all if query is empty
-      } else {
-        filteredBuildings = allBuildings.where((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          final buildingName = (data['Name'] ?? '').toLowerCase();
-          final locationLabel = (data['LocationLabel'] ?? '').toLowerCase(); // Assuming 'LocationLabel' is the field for locations
+    if (query.trim().isEmpty) {
+      // Reset to all buildings if the query is blank
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          filteredBuildings = List.from(allBuildings); // Create a copy to avoid modifying the original list
+          filteredBuildings.sort((a, b) {
+            final dataA = a.data() as Map<String, dynamic>;
+            final dataB = b.data() as Map<String, dynamic>;
+            final buildingNameA = (dataA['Name'] ?? '').toLowerCase();
+            final buildingNameB = (dataB['Name'] ?? '').toLowerCase();
+            return buildingNameA.compareTo(buildingNameB); // Sort alphabetically by building name
+          });
+        });
+      });
+    } else {
+      // Filter buildings and sort them alphabetically
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          filteredBuildings = allBuildings.where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final buildingName = (data['Name'] ?? '').toLowerCase();
+            final locationLabel = (data['LocationLabel'] ?? '').toLowerCase(); // Assuming 'LocationLabel' is the field for locations
 
-          return buildingName.contains(query.toLowerCase()) ||
-                 locationLabel.contains(query.toLowerCase()); // Check both name and location
-        }).toList();
-      }
-    });
+            return buildingName.contains(query.toLowerCase()) ||
+                locationLabel.contains(query.toLowerCase()); // Check both name and location
+          }).toList();
+
+          // Sort the filtered list alphabetically
+          filteredBuildings.sort((a, b) {
+            final dataA = a.data() as Map<String, dynamic>;
+            final dataB = b.data() as Map<String, dynamic>;
+            final buildingNameA = (dataA['Name'] ?? '').toLowerCase();
+            final buildingNameB = (dataB['Name'] ?? '').toLowerCase();
+            return buildingNameA.compareTo(buildingNameB); // Sort alphabetically by building name
+          });
+        });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            actions: [
-              Builder(
-                builder: (context) {
-                  return const BurgerMenu();
-                },
-              ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0, left: 4.0),
-                child: SearchField(onChanged: _filterBuildings), // Attach search callback
-              ),
-            ],
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search, color: Color(0xFF3D00A5)),
+            onPressed: () async {
+              final query = await showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(
+                  previousSearches: previousSearches,
+                  onSearchSubmitted: (query) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _filterBuildings(query);
+                      if (query.isNotEmpty && !previousSearches.contains(query)) {
+                        previousSearches.add(query);
+                      }
+                    });
+                  },
+                ),
+              );
+
+              if (query != null) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _filterBuildings(query);
+                });
+              }
+            },
           ),
-        ),
+        ],
       ),
       drawer: BurgerMenu.drawer(context),
       body: Stack(

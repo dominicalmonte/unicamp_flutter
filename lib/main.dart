@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'auth_provider.dart'; // Import AuthProvider
+import 'provider/auth_provider.dart'; // Import AuthProvider
+import 'provider/search_provider.dart'; // Import SearchProvider
 import 'pages/login_screen.dart';
 import 'pages/homepage.dart';
 import 'firebase_options.dart'; // Ensure you have the Firebase config file
@@ -15,7 +16,10 @@ void main() async {
   runApp(
     ChangeNotifierProvider(
       create: (_) => AuthProvider(),
-      child: const MyApp(),
+      child: ChangeNotifierProvider(
+        create: (_) => SearchProvider(), // Add SearchProvider here
+        child: const MyApp(),
+      ),
     ),
   );
 }

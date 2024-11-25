@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardlocations.dart';
 import '../components/burger.dart';
-import '../components/searchfield.dart';
 import '../pages/viewdetails.dart'; // Import the viewdetails.dart page
+import '../components/search_delegate.dart'; // Import the SearchDelegate
 
 class LocationsPage extends StatefulWidget {
   const LocationsPage({super.key});
@@ -15,6 +15,7 @@ class LocationsPage extends StatefulWidget {
 class _LocationsPageState extends State<LocationsPage> {
   List<QueryDocumentSnapshot> allLocations = [];
   List<QueryDocumentSnapshot> filteredLocations = [];
+  List<String> previousSearches = []; // To store previous search queries
 
   @override
   void initState() {
@@ -23,53 +24,99 @@ class _LocationsPageState extends State<LocationsPage> {
   }
 
   Future<void> _fetchLocations() async {
-    final snapshot = await FirebaseFirestore.instance.collection('Locations').get();
+    final snapshot = await FirebaseFirestore.instance
+        .collection('Locations')
+        .orderBy('Name') // Order by the 'Name' field alphabetically
+        .get();
+
     setState(() {
       allLocations = snapshot.docs;
-      filteredLocations = allLocations; // Initially show all locations
+      filteredLocations = List.from(allLocations); // Initially show all locations in alphabetical order
     });
   }
 
   void _filterLocations(String query) {
-    setState(() {
-      if (query.isEmpty) {
-        filteredLocations = allLocations; // Show all if query is empty
-      } else {
-        filteredLocations = allLocations.where((doc) {
-          final data = doc.data() as Map<String, dynamic>;
-          final locationName = (data['Name'] ?? '').toLowerCase(); // Location name
-          final buildingLabel = (data['BuildingLabel'] ?? '').toLowerCase(); // Associated building
+    if (query.trim().isEmpty) {
+      // Reset to all locations if the query is blank
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          filteredLocations = List.from(allLocations); // Create a copy to avoid modifying the original list
+          filteredLocations = filteredLocations.where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final visibility = data['Visibility'] ?? false;
+            return visibility == true; // Only include locations with Visibility true
+          }).toList();
 
-          return locationName.contains(query.toLowerCase()) ||
-                 buildingLabel.contains(query.toLowerCase()); // Check name and building
-        }).toList();
-      }
-    });
+          // Sort the filtered list alphabetically
+          filteredLocations.sort((a, b) {
+            final dataA = a.data() as Map<String, dynamic>;
+            final dataB = b.data() as Map<String, dynamic>;
+            final locationNameA = (dataA['Name'] ?? '').toLowerCase();
+            final locationNameB = (dataB['Name'] ?? '').toLowerCase();
+            return locationNameA.compareTo(locationNameB); // Sort alphabetically by location name
+          });
+        });
+      });
+    } else {
+      // Filter locations and sort them alphabetically
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        setState(() {
+          filteredLocations = allLocations.where((doc) {
+            final data = doc.data() as Map<String, dynamic>;
+            final locationName = (data['Name'] ?? '').toLowerCase();
+            final buildingLabel = (data['BuildingLabel'] ?? '').toLowerCase();
+            final visibility = data['Visibility'] ?? false;
+
+            return (visibility == true) && // Only include locations with Visibility true
+                  (locationName.contains(query.toLowerCase()) ||
+                    buildingLabel.contains(query.toLowerCase()));
+          }).toList();
+
+          // Sort the filtered list alphabetically
+          filteredLocations.sort((a, b) {
+            final dataA = a.data() as Map<String, dynamic>;
+            final dataB = b.data() as Map<String, dynamic>;
+            final locationNameA = (dataA['Name'] ?? '').toLowerCase();
+            final locationNameB = (dataB['Name'] ?? '').toLowerCase();
+            return locationNameA.compareTo(locationNameB); // Sort alphabetically by location name
+          });
+        });
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: AppBar(
-            automaticallyImplyLeading: false,
-            actions: [
-              Builder(
-                builder: (context) {
-                  return const BurgerMenu();
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search, color: const Color(0xFF3D00A5)),
+            onPressed: () async {
+              final query = await showSearch(
+              context: context,
+              delegate: CustomSearchDelegate(
+                previousSearches: previousSearches,
+                onSearchSubmitted: (query) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _filterLocations(query);
+                    if (query.isNotEmpty && !previousSearches.contains(query)) {
+                      previousSearches.add(query);
+                    }
+                  });
                 },
               ),
-              Padding(
-                padding: const EdgeInsets.only(right: 16.0, left: 4.0),
-                child: SearchField(onChanged: _filterLocations), // Attach search callback
-              ),
-            ],
+            );
+
+            if (query != null) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                _filterLocations(query);
+              });
+            }
+            },
           ),
-        ),
+        ],
       ),
       drawer: BurgerMenu.drawer(context),
       body: Stack(
@@ -93,13 +140,13 @@ class _LocationsPageState extends State<LocationsPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title
+                // Title outside the AppBar
                 const Padding(
-                  padding: EdgeInsets.only(bottom: 8.0),
+                  padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                   child: Text(
                     'Locations',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 28.0,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
