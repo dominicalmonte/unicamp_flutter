@@ -187,14 +187,6 @@ class _LocationsPageState extends State<LocationsPage> {
                             final location = filteredLocations[index];
                             final data = location.data() as Map<String, dynamic>;
                             return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewDetailsPage(building: location),
-                                  ),
-                                );
-                              },
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
                                 child: LocationCard(data: data),

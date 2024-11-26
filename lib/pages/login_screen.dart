@@ -104,7 +104,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: [
                     // App Logo
                     Image.asset(
-                      "assets/UniCampLogo.png",
+                      "assets/UniCampAlt.png",
                       height: MediaQuery.of(context).size.height * 0.1, // Dynamic sizing
                     ),
                     const SizedBox(height: 20),

@@ -1,11 +1,38 @@
-  // lib/polygons_data.dart
+// lib/polygons_data.dart
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
-  
+
+class NamedPolygon extends Polygon {
+  final String name;
+
+  NamedPolygon({
+    required this.name,
+    required List<LatLng> points,
+    Color color = const Color(0xFF000000),
+    Color borderColor = const Color(0xFF000000),
+    double borderStrokeWidth = 1.0,
+    bool isFilled = true,
+    bool isDotted = false,
+    TextStyle? labelStyle,
+  }) : super(
+          points: points,
+          color: color,
+          borderColor: borderColor,
+          borderStrokeWidth: borderStrokeWidth,
+          isFilled: isFilled,
+          labelStyle: labelStyle ?? const TextStyle( // Provide a default if it's null
+            color: Colors.black,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        );
+}
+
 List<Polygon> fetchPolygons() {
   return [
-    Polygon(
+    NamedPolygon(
+      name: "Martin Hall",
       points: [
         const LatLng(7.0721116, 125.613434),
         const LatLng(7.0723139, 125.6137237),
@@ -16,11 +43,15 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFFFF6F00).withOpacity(0.3),
       borderColor: const Color(0xFFFF6F00),
-      // label: 'Martin Hall',
-      labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
+      labelStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Community Center of the First Companions",
       points: [
         const LatLng(7.0709633, 125.613488),
         const LatLng(7.0713191, 125.6131783),
@@ -30,10 +61,15 @@ List<Polygon> fetchPolygons() {
       color: Colors.blue.withOpacity(0.3),
       borderColor: Colors.blue,
       // label: 'Community Center of the First Companions',
-      labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+      labelStyle: const TextStyle(
+        color: Colors.black,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Jubilee Hall",
       points: [
         const LatLng(7.0720092, 125.6134449),
         const LatLng(7.0718828, 125.6132925),
@@ -51,7 +87,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Bellarmine Hall",
       points: [
         const LatLng(7.0724586, 125.6131057),
         const LatLng(7.0723335, 125.6131044),
@@ -64,7 +101,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Wieman Hall",
       points: [
         const LatLng(7.0726736, 125.6130193),
         const LatLng(7.0727234, 125.6130199),
@@ -78,7 +116,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Dotterweich Hall",
       points: [
         const LatLng(7.0730766, 125.6126933),
         const LatLng(7.0730096, 125.6126309),
@@ -92,7 +131,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Gisbert Hall",
       points: [
         const LatLng(7.0726077, 125.6125993),
         const LatLng(7.0726877, 125.6125976),
@@ -108,7 +148,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Canisius Hall",
       points: [
         const LatLng(7.072177, 125.6126703),
         const LatLng(7.0722839, 125.6126694),
@@ -130,7 +171,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Thibault Hall",
       points: [
         const LatLng(7.0726605, 125.612555),
         const LatLng(7.0726605, 125.612597),
@@ -148,7 +190,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Del Rosario Hall",
       points: [
         const LatLng(7.0728011, 125.6124499),
         const LatLng(7.0729112, 125.6124857),
@@ -166,7 +209,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Chapel of Our Lady of the Assumption",
       points: [
         const LatLng(7.0716316, 125.6132798),
         const LatLng(7.0715087, 125.6131277), 
@@ -180,7 +224,8 @@ List<Polygon> fetchPolygons() {
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
     ),
-    Polygon(
+    NamedPolygon(
+      name: "Finster Hall",
       points: [
         const LatLng(7.072177, 125.6126703),
         const LatLng(7.072116, 125.6126357),
