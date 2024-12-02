@@ -1,3 +1,4 @@
+// viewdetails.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardlocations.dart';
@@ -17,21 +18,31 @@ class ViewDetailsPage extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false, // Prevent resizing when the keyboard appears
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(100.0),
+        preferredSize: const Size.fromHeight(80.0), // AppBar height
         child: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
+          padding: const EdgeInsets.only(top: 16.0, left: 12.0),
           child: AppBar(
             automaticallyImplyLeading: false,
-            actions: [
-              Builder(
-                builder: (context) {
-                  return const BurgerMenu();
-                },
-              ),
-              const Padding(
-                padding: EdgeInsets.only(right: 16.0, left: 4.0),
-              ),
-            ],
+            leading: Builder(
+              builder: (context) {
+                return IconButton(
+                  icon: Icon(
+                    Icons.menu,
+                    size: MediaQuery.of(context).size.width * 0.08, // Dynamic size based on screen width
+                  ),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                );
+              },
+            ),
+            title: Row(
+              mainAxisAlignment: MainAxisAlignment.center, // Center the logo
+              children: [
+                Image.asset(
+                  "assets/UniCampLogo.png",
+                  height: MediaQuery.of(context).size.height * 0.05, // Dynamic sizing for logo
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -189,7 +189,10 @@ class _LocationsPageState extends State<LocationsPage> {
                             return GestureDetector(
                               child: Padding(
                                 padding: const EdgeInsets.only(bottom: 16.0),
-                                child: LocationCard(data: data),
+                                child: LocationCard(
+                                  data: data, 
+                                  documentSnapshot: location, // Pass the entire document snapshot
+                                ),
                               ),
                             );
                           },

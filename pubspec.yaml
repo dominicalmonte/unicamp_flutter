@@ -26,6 +26,7 @@ dependencies:
   latlong2: ^0.9.1
   carousel_slider: ^5.0.0
   shared_preferences: ^2.3.3
+  flutter_launcher_icons: ^0.14.1
 
 dev_dependencies:
   flutter_test:
@@ -40,3 +41,18 @@ flutter:
     - assets/Main Page.jpg
     - assets/UniCampLogo.png
     - assets/UniCampAlt.png
+    - assets/IconLogo.png
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/IconLogo.png"
+  adaptive_icon_background: "#ffffff"  # Optional white background
+  adaptive_icon_foreground: "assets/IconLogo.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: true
+  windows:
+    generate: true
+  macos:
+    generate: true

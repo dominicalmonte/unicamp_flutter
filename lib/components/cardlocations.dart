@@ -1,18 +1,61 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-class LocationCard extends StatelessWidget {
+class LocationCard extends StatefulWidget {
   final Map<String, dynamic> data;
+  final DocumentSnapshot? documentSnapshot;
 
-  const LocationCard({super.key, required this.data});
+  const LocationCard({
+    super.key, 
+    required this.data, 
+    this.documentSnapshot
+  });
+
+  @override
+  _LocationCardState createState() => _LocationCardState();
+}
+
+class _LocationCardState extends State<LocationCard> {
+  late bool _isFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize favorite status from the data
+    _isFavorite = widget.data['Favorites'] ?? false;
+  }
+
+  Future<void> _toggleFavorite() async {
+    try {
+      // If documentSnapshot is provided, use it to update
+      if (widget.documentSnapshot != null) {
+        await widget.documentSnapshot!.reference.update({
+          'Favorites': !_isFavorite
+        });
+      }
+
+      // Update local state
+      setState(() {
+        _isFavorite = !_isFavorite;
+      });
+    } catch (e) {
+      print('Error toggling favorite: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to update favorite status')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     // Get the PhotoURL array (check for multiple images)
-    final photoURLs = data['PhotoURL'] is List ? List<String>.from(data['PhotoURL']) : [];
+    final photoURLs = widget.data['PhotoURL'] is List 
+        ? List<String>.from(widget.data['PhotoURL']) 
+        : [];
 
     // Get email string
-    final email = data['Email'] ?? 'Unknown Email';
+    final email = widget.data['Email'] ?? 'Unknown Email';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
@@ -52,7 +95,7 @@ class LocationCard extends StatelessWidget {
                     );
                   }).toList(),
                 )
-              else if (photoURLs.length < 2) // Only one image, display it directly
+              else if (photoURLs.isNotEmpty) // Only one image, display it directly
                 ClipRRect(
                   borderRadius: BorderRadius.circular(8.0),
                   child: Image.network(
@@ -64,28 +107,51 @@ class LocationCard extends StatelessWidget {
                 )
               else // No images available, fallback
                 const SizedBox.shrink(),
+              
               const SizedBox(height: 16.0),
-              // Name
-              Text(
-                data['Name'] ?? 'Unknown Name',
-                style: const TextStyle(
-                  fontSize: 20.0,
-                  fontWeight: FontWeight.bold,
-                ),
+              
+              // Name and Favorite Row
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      widget.data['Name'] ?? 'Unknown Name',
+                      style: const TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  // Favorite Icon
+                  IconButton(
+                    icon: Icon(
+                      Icons.favorite,
+                      color: _isFavorite 
+                        ? const Color(0xFFFF0054) 
+                        : Colors.grey,
+                    ),
+                    onPressed: _toggleFavorite,
+                  ),
+                ],
               ),
+              
               const SizedBox(height: 8.0),
+              
               // Email (instead of Location)
               Text(
-                email, // Displaying the email string
+                email,
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey,
                 ),
               ),
+              
               const SizedBox(height: 8.0),
+              
               // Description
               Text(
-                data['Description'] ?? 'No Description Provided',
+                widget.data['Description'] ?? 'No Description Provided',
                 style: const TextStyle(fontSize: 14.0),
               ),
             ],
