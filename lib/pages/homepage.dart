@@ -1,78 +1,70 @@
 import 'package:flutter/material.dart';
-import '../components/burger.dart'; 
+import '../components/burger.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'polygons_data.dart'; // Import your polygons data
-import '../pages/viewdetails.dart'; // Import the viewdetails.dart page
+import 'polygons_data.dart'; 
+import 'view_details.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
 
-  // Add this method to handle polygon tapping
-  // In HomePage class
-void handlePolygonTap(BuildContext context, String buildingName) async {
-  try {
-    // First, fetch the building document from Firestore
-    QuerySnapshot buildingQuery = await FirebaseFirestore.instance
-        .collection('Buildings')
-        .where('Name', isEqualTo: buildingName)
-        .limit(1)
-        .get();
+  
+  void handlePolygonTap(BuildContext context, String buildingName) async {
+    try {
+      QuerySnapshot buildingQuery = await FirebaseFirestore.instance
+          .collection('Buildings')
+          .where('Name', isEqualTo: buildingName)
+          .limit(1)
+          .get();
 
-    if (buildingQuery.docs.isNotEmpty) {
-      // Navigate to ViewDetailsPage with the first matching building document
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => ViewDetailsPage(
-            building: buildingQuery.docs.first
+      if (buildingQuery.docs.isNotEmpty) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                ViewDetailsPage(building: buildingQuery.docs.first),
           ),
-        ),
-      );
-    } else {
-      // Handle case where no building is found
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('No building found: $buildingName')),
+        );
+      }
+    } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('No building found: $buildingName')),
+        SnackBar(content: Text('Error: $e')),
       );
     }
-  } catch (e) {
-    // Handle any potential errors
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error: $e')),
-    );
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 236, 233, 242),
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0), // AppBar height
+        preferredSize: const Size.fromHeight(80.0), 
         child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 12.0),
+          padding: const EdgeInsets.only(top: 15.0), 
           child: AppBar(
             automaticallyImplyLeading: false,
+            leadingWidth: MediaQuery.of(context).size.width * 0.15,
             leading: Builder(
               builder: (context) {
                 return IconButton(
                   icon: Icon(
                     Icons.menu,
-                    size: MediaQuery.of(context).size.width * 0.08, // Dynamic size based on screen width
+                    size: MediaQuery.of(context).size.width * 0.08,
                   ),
                   onPressed: () => Scaffold.of(context).openDrawer(),
                 );
               },
             ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Center the logo
-              children: [
-                Image.asset(
-                  "assets/UniCampLogo.png",
-                  height: MediaQuery.of(context).size.height * 0.05, // Dynamic sizing for logo
-                ),
-              ],
+            title: Image.asset(
+              "assets/UniCampLogo.png",
+              height: MediaQuery.of(context).size.height * 0.05,
             ),
+            centerTitle: true,
           ),
         ),
       ),
@@ -81,7 +73,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
     );
   }
 
-  Widget map(BuildContext context) { // Add BuildContext parameter
+  Widget map(BuildContext context) {
     return FlutterMap(
       options: MapOptions(
         onTap: (tapPosition, latlng) {
@@ -89,20 +81,18 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
           for (final polygon in fetchPolygons()) {
             if (_isPointInPolygon(latlng, polygon.points)) {
               if (polygon is NamedPolygon) {
-                // Use the method within the class
                 handlePolygonTap(context, polygon.name);
               }
-              break; // Stop once a polygon is tapped
+              break; 
             }
           }
         },
-        initialCenter: LatLng(7.0720248, 125.6132828), 
-        initialZoom: 18, 
+        initialCenter: LatLng(7.0720248, 125.6132828),
+        initialZoom: 18,
       ),
       children: [
         openStreetMapTileLayer,
-        PolygonLayer(polygons: fetchPolygons()
-        ), 
+        PolygonLayer(polygons: fetchPolygons()),
         const MarkerLayer(
           markers: [
             Marker(
@@ -111,7 +101,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.071847, 125.613745), // Martin Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFFd00000), 
+                color: Color(0xFFd00000),
                 size: 40.0,
               ),
             ),
@@ -121,7 +111,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0724562, 125.6132407), // Bellarmine Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFF8fe388), 
+                color: Color(0xFF8fe388),
                 size: 40.0,
               ),
             ),
@@ -131,39 +121,28 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0717332, 125.6134590), // Jubilee Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFFcbff8c), 
+                color: Color(0xFFcbff8c),
                 size: 40.0,
               ),
             ),
             Marker(
               width: 40.0,
               height: 40.0,
-              point: LatLng(7.0713186, 125.6133842), // Community Center of the First Companions
+              point: LatLng(7.0713186,
+                  125.6133842), // Community Center of the First Companions
               child: Icon(
                 Icons.location_on,
-                color: Color(0xffffba08), 
+                color: Color(0xffffba08),
                 size: 40.0,
               ),
             ),
-            /*
-            Marker(
-              width: 40.0,
-              height: 40.0,
-              point: LatLng(7.0715399, 125.6131965), // Chapel of Our Lady of the Assumption
-              child: Icon(
-                Icons.location_on,
-                color: Color(0xFF2ECC71), 
-                size: 40.0,
-              ),
-            ),
-             */
             Marker(
               width: 40.0,
               height: 40.0,
               point: LatLng(7.0721727, 125.6126399), // Finster Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFFff9b85), 
+                color: Color(0xFFff9b85),
                 size: 40.0,
               ),
             ),
@@ -173,7 +152,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0723061, 125.6129356), // Canisius Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFF5d2e8c), 
+                color: Color(0xFF5d2e8c),
                 size: 40.0,
               ),
             ),
@@ -183,7 +162,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0725048, 125.6126061), // Thibault Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFFfad643), 
+                color: Color(0xFFfad643),
                 size: 40.0,
               ),
             ),
@@ -193,7 +172,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0727320, 125.6130785), // Wieman Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFF3185fc), 
+                color: Color(0xFF3185fc),
                 size: 40.0,
               ),
             ),
@@ -203,7 +182,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0729413, 125.6129910), // Dotterweich Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFF1b998b), 
+                color: Color(0xFF1b998b),
                 size: 40.0,
               ),
             ),
@@ -213,7 +192,7 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
               point: LatLng(7.0729739, 125.6125725), // Del Rosario Hall
               child: Icon(
                 Icons.location_on,
-                color: Color(0xFFe85d04), 
+                color: Color(0xFFe85d04),
                 size: 40.0,
               ),
             ),
@@ -224,9 +203,9 @@ void handlePolygonTap(BuildContext context, String buildingName) async {
   }
 
   TileLayer get openStreetMapTileLayer => TileLayer(
-    urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-    userAgentPackageName: 'dev.fleaflet.flutter.map.example',
-  );
+        urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+        userAgentPackageName: 'dev.fleaflet.flutter.map.example',
+      );
 }
 
 bool _isPointInPolygon(LatLng point, List<LatLng> polygonPoints) {
@@ -236,8 +215,10 @@ bool _isPointInPolygon(LatLng point, List<LatLng> polygonPoints) {
   for (int i = 0; i < n; i++) {
     LatLng p1 = polygonPoints[i];
     LatLng p2 = polygonPoints[(i + 1) % n]; // Next point, wrapping around
-    if (point.latitude > p1.latitude && point.latitude <= p2.latitude || point.latitude > p2.latitude && point.latitude <= p1.latitude) {
-      double slope = (p2.longitude - p1.longitude) / (p2.latitude - p1.latitude);
+    if (point.latitude > p1.latitude && point.latitude <= p2.latitude ||
+        point.latitude > p2.latitude && point.latitude <= p1.latitude) {
+      double slope =
+          (p2.longitude - p1.longitude) / (p2.latitude - p1.latitude);
       double intersectX = p1.longitude + slope * (point.latitude - p1.latitude);
       if (intersectX > point.longitude) {
         intersections++;

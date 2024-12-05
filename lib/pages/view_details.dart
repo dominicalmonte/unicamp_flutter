@@ -15,33 +15,31 @@ class ViewDetailsPage extends StatelessWidget {
     final buildingName = buildingData['Name'] ?? 'Unknown Name'; // Extract building name
 
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 236, 233, 242),
       resizeToAvoidBottomInset: false, // Prevent resizing when the keyboard appears
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0), // AppBar height
+        preferredSize: const Size.fromHeight(80.0), 
         child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, left: 12.0),
+          padding: const EdgeInsets.only(top: 15.0), 
           child: AppBar(
             automaticallyImplyLeading: false,
+            leadingWidth: MediaQuery.of(context).size.width * 0.15,
             leading: Builder(
               builder: (context) {
                 return IconButton(
                   icon: Icon(
                     Icons.menu,
-                    size: MediaQuery.of(context).size.width * 0.08, // Dynamic size based on screen width
+                    size: MediaQuery.of(context).size.width * 0.08,
                   ),
                   onPressed: () => Scaffold.of(context).openDrawer(),
                 );
               },
             ),
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.center, // Center the logo
-              children: [
-                Image.asset(
-                  "assets/UniCampLogo.png",
-                  height: MediaQuery.of(context).size.height * 0.05, // Dynamic sizing for logo
-                ),
-              ],
+            title: Image.asset(
+              "assets/UniCampLogo.png",
+              height: MediaQuery.of(context).size.height * 0.05,
             ),
+            centerTitle: true,
           ),
         ),
       ),

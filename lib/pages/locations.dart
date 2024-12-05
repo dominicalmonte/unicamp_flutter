@@ -19,7 +19,15 @@ class _LocationsPageState extends State<LocationsPage> {
   @override
   void initState() {
     super.initState();
+    _initializePreviousSearches();
     _fetchLocations();
+  }
+
+  Future<void> _initializePreviousSearches() async {
+    final loadedSearches = await CustomSearchDelegate.loadPreviousSearches();
+    setState(() {
+      previousSearches = loadedSearches;
+    });
   }
 
   Future<void> _fetchLocations() async {
@@ -87,23 +95,32 @@ class _LocationsPageState extends State<LocationsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 236, 233, 242),
       resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0), // Keep dynamic height if needed
+        preferredSize: const Size.fromHeight(80.0),
         child: Padding(
-          padding: const EdgeInsets.only(top: 16.0, left:12.0),
+          padding: const EdgeInsets.only(top: 16.0, left: 12.0),
           child: AppBar(
+            backgroundColor: const Color.fromARGB(255, 236, 233, 242), 
+            elevation: 0,
             automaticallyImplyLeading: false,
             leading: Builder(
               builder: (context) {
                 return IconButton(
                   icon: Icon(
                     Icons.menu,
-                    size: MediaQuery.of(context).size.width * 0.08, // Dynamic size based on screen width
+                    size: MediaQuery.of(context).size.width * 0.08,
                   ),
                   onPressed: () => Scaffold.of(context).openDrawer(),
                 );
               },
+            ),
+            title: Center(
+              child: Image.asset(
+                "assets/UniCampLogo.png",
+                height: MediaQuery.of(context).size.height * 0.05,
+              ),
             ),
             actions: [
               Padding(
@@ -112,7 +129,7 @@ class _LocationsPageState extends State<LocationsPage> {
                   icon: Icon(
                     Icons.search,
                     size: MediaQuery.of(context).size.width * 0.08,
-                    color: const Color(0xFF3D00A5), 
+                    color: const Color(0xFF3D00A5),
                   ),
                   onPressed: () async {
                     final query = await showSearch(
@@ -122,7 +139,8 @@ class _LocationsPageState extends State<LocationsPage> {
                         onSearchSubmitted: (query) {
                           WidgetsBinding.instance.addPostFrameCallback((_) {
                             _filterLocations(query);
-                            if (query.isNotEmpty && !previousSearches.contains(query)) {
+                            if (query.isNotEmpty &&
+                                !previousSearches.contains(query)) {
                               previousSearches.add(query);
                             }
                           });
@@ -132,39 +150,36 @@ class _LocationsPageState extends State<LocationsPage> {
 
                     if (query != null) {
                       WidgetsBinding.instance.addPostFrameCallback((_) {
-                      _filterLocations(query);
+                        _filterLocations(query);
                       });
                     }
                   },
                 ),
               ),
             ],
+            centerTitle: true,
           ),
         ),
       ),
       drawer: BurgerMenu.drawer(context),
       body: Stack(
         children: [
-          // Fixed background image layer
           Positioned.fill(
             child: Image.asset(
               "assets/Main Page.jpg",
               fit: BoxFit.cover,
             ),
           ),
-          // Optional semi-transparent overlay for better text visibility
           Positioned.fill(
             child: Container(
               color: Colors.black.withOpacity(0.3),
             ),
           ),
-          // Main content layer
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0).copyWith(top: 8.0, bottom: 10.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Title outside the AppBar
                 const Padding(
                   padding: EdgeInsets.only(top: 16.0, bottom: 8.0),
                   child: Text(
@@ -176,7 +191,6 @@ class _LocationsPageState extends State<LocationsPage> {
                     ),
                   ),
                 ),
-                // List of buildings
                 Expanded(
                   child: filteredLocations.isEmpty
                       ? const Center(child: Text('No locations found.', style: TextStyle(color: Colors.white)))

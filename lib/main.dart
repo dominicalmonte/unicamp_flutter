@@ -24,7 +24,7 @@ void main() async {
     ChangeNotifierProvider(
       create: (_) => AuthProvider(),
       child: ChangeNotifierProvider(
-        create: (_) => SearchProvider(), // Add SearchProvider here
+        create: (_) => SearchProvider(), 
         child: const MyApp(),
       ),
     ),
@@ -36,11 +36,13 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Firebase Integration',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: const Color.fromARGB(255, 236, 233, 242),
       ),
       initialRoute: '/', // Set initial route to splash screen
       routes: {

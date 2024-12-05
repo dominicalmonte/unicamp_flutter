@@ -100,7 +100,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xffffba08).withOpacity(0.3),
       borderColor: const Color(0xffffba08),
-      // label: 'Community Center of the First Companions',
       labelStyle: const TextStyle(
         color: Colors.black,
         fontSize: 16,
@@ -124,7 +123,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFFcbff8c).withOpacity(0.3),
       borderColor: const Color(0xFFcbff8c),
-      // label: 'Jubilee Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
@@ -139,7 +137,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFF8fe388).withOpacity(0.3),
       borderColor: const Color(0xFF8fe388),
-      // label: 'Bellarmine Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
@@ -154,7 +151,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFF1b998b).withOpacity(0.3),
       borderColor: const Color(0xFF1b998b),
-      // label: 'Dotterweich Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
@@ -175,7 +171,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFF3185fc).withOpacity(0.3),
       borderColor: const Color(0xFF3185fc),
-      // label: 'Wieman Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
@@ -199,7 +194,6 @@ List<Polygon> fetchPolygons() {
       ],
       color:  const Color(0xFF5d2e8c).withOpacity(0.3),
       borderColor:  const Color(0xFF5d2e8c),
-      // label: 'Canasius Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
@@ -219,7 +213,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFFfad643).withOpacity(0.3),
       borderColor: const Color(0xFFfad643),
-      // label: 'Thibault Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
@@ -242,26 +235,10 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFFe85d04).withOpacity(0.3),
       borderColor: const Color(0xFFe85d04),
-      // label: 'Del Rosario Hall',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       
     ),
-    /* NamedPolygon(
-      name: "Chapel of Our Lady of the Assumption",
-      points: [
-        const LatLng(7.0716316, 125.6132798),
-        const LatLng(7.0715087, 125.6131277), 
-        const LatLng(7.0713892, 125.6132257),
-        const LatLng(7.0715121, 125.6133779),
-        const LatLng(7.0716316, 125.6132798),
-      ],
-      color: const Color(0xFF2ECC71).withOpacity(0.3),
-      borderColor: const Color(0xFF2ECC71),
-      // label: 'Chapel of Our Lady of the Assumption',
-      labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
-      borderStrokeWidth: 1.0,
-    ), */
     NamedPolygon(
       name: "Finster Hall",
       points: [
@@ -280,7 +257,6 @@ List<Polygon> fetchPolygons() {
         const LatLng(7.0716083, 125.612916),
         const LatLng(7.0716905, 125.6128573),
         const LatLng(7.0716867, 125.6128525),
-        // const LatLng(7.0717709, 125.6127784),
         const LatLng(7.0717412, 125.6128161),
         const LatLng(7.0717351, 125.6128084),
         const LatLng(7.0718436, 125.6127201),
@@ -310,7 +286,6 @@ List<Polygon> fetchPolygons() {
         const LatLng(7.0727968, 125.6124452),
         const LatLng(7.0727406, 125.6125549),
         const LatLng(7.0726884, 125.6125757),
-        // const LatLng(7.0726622, 125.6125965),
         const LatLng(7.0726623, 125.6125536),
         const LatLng(7.072314, 125.612553),
         const LatLng(7.0723146, 125.6126692),
@@ -318,7 +293,6 @@ List<Polygon> fetchPolygons() {
       ],
       color: const Color(0xFFff9b85).withOpacity(0.3),
       borderColor: const Color(0xFFff9b85),
-      // label: 'Finster',
       labelStyle: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
       borderStrokeWidth: 1.0,
       

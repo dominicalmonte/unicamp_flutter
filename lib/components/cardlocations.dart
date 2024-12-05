@@ -22,20 +22,17 @@ class _LocationCardState extends State<LocationCard> {
   @override
   void initState() {
     super.initState();
-    // Initialize favorite status from the data
     _isFavorite = widget.data['Favorites'] ?? false;
   }
 
   Future<void> _toggleFavorite() async {
     try {
-      // If documentSnapshot is provided, use it to update
       if (widget.documentSnapshot != null) {
         await widget.documentSnapshot!.reference.update({
           'Favorites': !_isFavorite
         });
       }
 
-      // Update local state
       setState(() {
         _isFavorite = !_isFavorite;
       });
@@ -54,7 +51,6 @@ class _LocationCardState extends State<LocationCard> {
         ? List<String>.from(widget.data['PhotoURL']) 
         : [];
 
-    // Get email string
     final email = widget.data['Email'] ?? 'Unknown Email';
 
     return Padding(
@@ -105,12 +101,11 @@ class _LocationCardState extends State<LocationCard> {
                     fit: BoxFit.cover,
                   ),
                 )
-              else // No images available, fallback
+              else 
                 const SizedBox.shrink(),
               
               const SizedBox(height: 16.0),
               
-              // Name and Favorite Row
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -123,7 +118,6 @@ class _LocationCardState extends State<LocationCard> {
                       ),
                     ),
                   ),
-                  // Favorite Icon
                   IconButton(
                     icon: Icon(
                       Icons.favorite,
@@ -138,7 +132,7 @@ class _LocationCardState extends State<LocationCard> {
               
               const SizedBox(height: 8.0),
               
-              // Email (instead of Location)
+
               Text(
                 email,
                 style: const TextStyle(
@@ -149,7 +143,6 @@ class _LocationCardState extends State<LocationCard> {
               
               const SizedBox(height: 8.0),
               
-              // Description
               Text(
                 widget.data['Description'] ?? 'No Description Provided',
                 style: const TextStyle(fontSize: 14.0),

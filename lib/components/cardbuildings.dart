@@ -69,7 +69,6 @@ class BuildingCard extends StatelessWidget {
               else // No images available, fallback
                 const SizedBox.shrink(),
               const SizedBox(height: 16.0),
-              // Name
               Text(
                 data['Name'] ?? 'Unknown Name',
                 style: const TextStyle(
@@ -78,16 +77,14 @@ class BuildingCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 8.0),
-              // Location
               Text(
-                location, // Displaying the location string
+                location, 
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey,
                 ),
               ),
               const SizedBox(height: 8.0),
-              // Description
               Text(
                 data['Description'] ?? 'No Description Provided',
                 style: const TextStyle(fontSize: 14.0),
