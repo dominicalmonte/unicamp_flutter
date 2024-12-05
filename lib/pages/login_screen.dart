@@ -91,8 +91,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final double screenHeight = MediaQuery.of(context).size.height;
-    final double logoHeight = screenHeight * 0.2; // Logo height is 20% of the screen height
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

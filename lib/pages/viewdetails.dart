@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardlocations.dart';
 import '../components/burger.dart';
-import '../components/searchfield.dart';
 
 class ViewDetailsPage extends StatelessWidget {
   final DocumentSnapshot building;

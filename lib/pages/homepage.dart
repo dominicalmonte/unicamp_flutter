@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../components/burger.dart'; 
-import '../components/searchfield.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'polygons_data.dart'; // Import your polygons data

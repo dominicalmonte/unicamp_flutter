@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardlocations.dart';
 import '../components/burger.dart';
-import '../pages/viewdetails.dart'; // Import the viewdetails.dart page
 import '../components/search_delegate.dart'; // Import the SearchDelegate
 
 class LocationsPage extends StatefulWidget {

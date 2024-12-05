@@ -77,7 +77,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<String?> loginAsGuest() async {
     try {
-      final userCredential = await _auth.signInAnonymously();
+      await _auth.signInAnonymously();
       return null; // No error
     } on FirebaseAuthException catch (e) {
       return e.message; // Return error message
