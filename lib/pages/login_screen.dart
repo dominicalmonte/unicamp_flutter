@@ -16,12 +16,26 @@ class _LoginScreenState extends State<LoginScreen> {
   bool _isLoading = false;
   String _errorMessage = '';
 
+  void closeKeyboard() {
+    FocusScope.of(context).unfocus();
+  }
+
   Future<void> _login(BuildContext context) async {
+    closeKeyboard();
+
+    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
+      setState(() {
+        _errorMessage = 'Invalid Email/Password';
+      });
+      return;
+    }
+
     setState(() {
       _isLoading = true;
+      _errorMessage = ''; 
     });
 
-    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false); // Use alias
+    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false); 
     final error = await authProvider.login(
       _emailController.text.trim(),
       _passwordController.text.trim(),
@@ -29,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       _isLoading = false;
-      _errorMessage = error ?? ''; // Display error if present
+      _errorMessage = error ?? 'Invalid Email/Password'; 
     });
 
     if (error == null) {
@@ -47,7 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       _isLoading = false;
-      _errorMessage = error ?? '';
+      _errorMessage = error ?? 'Invalid Email/Password'; 
     });
 
     if (error == null) {
@@ -65,7 +79,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     setState(() {
       _isLoading = false;
-      _errorMessage = error ?? '';
+      _errorMessage = error ?? 'Invalid Attempt'; 
     });
 
     if (error == null) {
