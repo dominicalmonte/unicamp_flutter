@@ -10,8 +10,9 @@ class AuthProvider extends ChangeNotifier {
   User? get currentUser => _user;
 
   AuthProvider() {
-    _auth.authStateChanges().listen((User? user) {
+    _auth.authStateChanges().listen((User ? user) {
       _user = user;
+      print("User  state changed: ${user != null ? user.email : 'Logged out'}"); // Debug print
       notifyListeners();
     });
   }

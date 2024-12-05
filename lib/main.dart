@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
-import 'provider/auth_provider.dart'; // Import AuthProvider
-import 'provider/search_provider.dart'; // Import SearchProvider
+import 'provider/auth_provider.dart'; 
+import 'provider/search_provider.dart'; 
 import 'pages/login_screen.dart';
 import 'pages/homepage.dart';
-import 'firebase_options.dart'; // Ensure you have the Firebase config file
+import 'pages/splash_screen.dart'; 
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,8 +36,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      initialRoute: '/login',
+      initialRoute: '/', // Set initial route to splash screen
       routes: {
+        '/': (context) => SplashScreen(), // Splash screen as the initial route
         '/login': (context) => const LoginScreen(),
         '/home': (context) => HomePage(),
       },
