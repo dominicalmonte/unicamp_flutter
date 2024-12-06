@@ -21,74 +21,78 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Future<void> _login(BuildContext context) async {
-    closeKeyboard();
+  closeKeyboard();
 
-    if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
-      setState(() {
-        _errorMessage = 'Invalid Email/Password';
-      });
-      return;
-    }
-
+  if (_emailController.text.trim().isEmpty || _passwordController.text.trim().isEmpty) {
     setState(() {
-      _isLoading = true;
-      _errorMessage = ''; 
+      _errorMessage = 'Invalid Email/Password';
     });
-
-    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false); 
-    final error = await authProvider.login(
-      _emailController.text.trim(),
-      _passwordController.text.trim(),
-    );
-
-    setState(() {
-      _isLoading = false;
-      _errorMessage = error ?? 'Invalid Email/Password'; 
-    });
-
-    if (error == null) {
-      Navigator.pushReplacementNamed(context, '/home');
-    }
+    return;
   }
 
-  Future<void> _loginWithGoogle(BuildContext context) async {
-    setState(() {
-      _isLoading = true;
-    });
+  setState(() {
+    _isLoading = true;
+    _errorMessage = ''; 
+  });
 
-    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false);
-    final error = await authProvider.loginWithGoogle();
+  final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false); 
+  final error = await authProvider.login(
+    _emailController.text.trim(),
+    _passwordController.text.trim(),
+  );
 
-    setState(() {
-      _isLoading = false;
-      _errorMessage = error ?? 'Invalid Email/Password'; 
-    });
+  setState(() {
+    _isLoading = false;
+    // Only set error message if there's an actual error
+    _errorMessage = error ?? ''; 
+  });
 
-    if (error == null) {
-      Navigator.pushReplacementNamed(context, '/home');
-    }
+  if (error == null) {
+    Navigator.pushReplacementNamed(context, '/home');
   }
+}
 
-  Future<void> _loginAsGuest(BuildContext context) async {
-    setState(() {
-      _isLoading = true;
-    });
+Future<void> _loginWithGoogle(BuildContext context) async {
+  setState(() {
+    _isLoading = true;
+    _errorMessage = ''; // Reset error message
+  });
 
-    final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false);
-    final error = await authProvider.loginAsGuest();
+  final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false);
+  final error = await authProvider.loginWithGoogle();
 
-    setState(() {
-      _isLoading = false;
-      _errorMessage = error ?? 'Invalid Attempt'; 
-    });
+  setState(() {
+    _isLoading = false;
+    // Only set error message if there's an actual error
+    _errorMessage = error ?? ''; 
+  });
 
-    if (error == null) {
-      Navigator.pushReplacementNamed(context, '/home');
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(_errorMessage)));
-    }
+  if (error == null) {
+    Navigator.pushReplacementNamed(context, '/home');
   }
+}
 
+Future<void> _loginAsGuest(BuildContext context) async {
+  setState(() {
+    _isLoading = true;
+    _errorMessage = ''; // Reset error message
+  });
+
+  final authProvider = Provider.of<localAuthProvider.AuthProvider>(context, listen: false);
+  final error = await authProvider.loginAsGuest();
+
+  setState(() {
+    _isLoading = false;
+    // Only set error message if there's an actual error
+    _errorMessage = error ?? ''; 
+  });
+
+  if (error == null) {
+    Navigator.pushReplacementNamed(context, '/home');
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+  }
+}
   @override
   Widget build(BuildContext context) {
 

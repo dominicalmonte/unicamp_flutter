@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_unicamp/pages/login_screen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart'; 
-import '../provider/auth_provider.dart'; 
+import 'package:provider/provider.dart';
+import '../provider/auth_provider.dart';
 import '../pages/buildings.dart';
 import '../pages/locations.dart';
 
@@ -23,7 +24,6 @@ class BurgerMenu extends StatelessWidget {
   static Drawer drawer(BuildContext context) {
     String currentRouteName = ModalRoute.of(context)?.settings.name ?? '';
 
-    
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
     final currentUser = authProvider.currentUser;
 
@@ -65,9 +65,7 @@ class BurgerMenu extends StatelessWidget {
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 10),
-
                 Padding(
                   padding: const EdgeInsets.only(left: 16.0),
                   child: Column(
@@ -115,7 +113,20 @@ class BurgerMenu extends StatelessWidget {
                         onTap: () async {
                           await authProvider.logout();
                           Navigator.pop(context); // Close the drawer
-                          Navigator.pushReplacementNamed(context, '/login');
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            PageRouteBuilder(
+                              pageBuilder:
+                                  (context, animation, secondaryAnimation) =>
+                                      const LoginScreen(),
+                              transitionsBuilder: (context, animation,
+                                  secondaryAnimation, child) {
+                                return child; // No transition
+                              },
+                              settings: const RouteSettings(name: '/login'),
+                            ),
+                            (route) => false, // Remove all previous routes
+                          );
                         },
                       ),
                     ],
@@ -124,7 +135,6 @@ class BurgerMenu extends StatelessWidget {
               ],
             ),
           ),
-
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(

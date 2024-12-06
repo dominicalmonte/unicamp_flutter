@@ -7,7 +7,7 @@ class BuildingCard extends StatelessWidget {
 
   const BuildingCard({super.key, required this.data});
 
-  @override
+   @override
   Widget build(BuildContext context) {
     // Get the PhotoURL array (check for multiple images)
     final photoURLs = data['PhotoURL'] is List ? List<String>.from(data['PhotoURL']) : [];
@@ -43,13 +43,18 @@ class BuildingCard extends StatelessWidget {
                   items: photoURLs.map((url) {
                     return Builder(
                       builder: (BuildContext context) {
-                        return ClipRRect(
-                          borderRadius: BorderRadius.circular(8.0),
-                          child: Image.network(
-                            url,
-                            height: 200.0,
-                            width: double.infinity,
-                            fit: BoxFit.cover,
+                        return GestureDetector(
+                          onTap: () {
+                            _showImageDialog(context, url);
+                          },
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(8.0),
+                            child: Image.network(
+                              url,
+                              height: 200.0,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         );
                       },
@@ -57,13 +62,18 @@ class BuildingCard extends StatelessWidget {
                   }).toList(),
                 )
               else if (photoURLs.length == 1) // Only one image, display it directly
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.network(
-                    photoURLs.first,
-                    height: 200.0,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
+                GestureDetector(
+                  onTap: () {
+                    _showImageDialog(context, photoURLs.first);
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      photoURLs.first,
+                      height: 200.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 )
               else // No images available, fallback
@@ -78,7 +88,7 @@ class BuildingCard extends StatelessWidget {
               ),
               const SizedBox(height: 8.0),
               Text(
-                location, 
+                location,
                 style: const TextStyle(
                   fontSize: 16.0,
                   color: Colors.grey,
@@ -93,6 +103,31 @@ class BuildingCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  // Function to show the full-screen image dialog
+  void _showImageDialog(BuildContext context, String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: EdgeInsets.all(10),
+          child: GestureDetector(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10.0),
+              child: Image.network(
+                imageUrl,
+                fit: BoxFit.contain,
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 }

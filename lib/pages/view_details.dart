@@ -11,16 +11,16 @@ class ViewDetailsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final buildingData = building.data() as Map<String, dynamic>; // Get building data as a Map
-    final buildingName = buildingData['Name'] ?? 'Unknown Name'; // Extract building name
+    final buildingData = building.data() as Map<String, dynamic>;
+    final buildingName = buildingData['Name'] ?? 'Unknown Name';
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 236, 233, 242),
-      resizeToAvoidBottomInset: false, // Prevent resizing when the keyboard appears
+      resizeToAvoidBottomInset: false,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(80.0), 
+        preferredSize: const Size.fromHeight(80.0),
         child: Padding(
-          padding: const EdgeInsets.only(top: 15.0), 
+          padding: const EdgeInsets.only(top: 15.0),
           child: AppBar(
             automaticallyImplyLeading: false,
             leadingWidth: MediaQuery.of(context).size.width * 0.15,
@@ -48,7 +48,6 @@ class ViewDetailsPage extends StatelessWidget {
         builder: (context, constraints) {
           return Stack(
             children: [
-              // Background image
               Positioned.fill(
                 child: Image.asset(
                   "assets/Main Page.jpg",
@@ -57,7 +56,6 @@ class ViewDetailsPage extends StatelessWidget {
                   height: constraints.maxHeight,
                 ),
               ),
-              // Optional overlay for readability
               Positioned.fill(
                 child: Container(
                   color: Colors.black.withOpacity(0.3),
@@ -65,8 +63,10 @@ class ViewDetailsPage extends StatelessWidget {
               ),
               FutureBuilder<QuerySnapshot>(
                 future: FirebaseFirestore.instance
-                    .collection('Locations') // Fetch data from 'Locations' collection
-                    .where('Building', isEqualTo: buildingName) // Compare with the building name
+                    .collection('Locations')
+                    .where('Building', isEqualTo: buildingName)
+                    .where('Visibility',
+                        isEqualTo: true) // Add visibility filter
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -83,7 +83,24 @@ class ViewDetailsPage extends StatelessWidget {
                       ),
                     );
                   } else {
-                    final locations = snapshot.data!.docs;
+                    // Sort locations manually
+                    final locations = snapshot.data!.docs.toList()
+                      ..sort((a, b) {
+                        final dataA = a.data() as Map<String, dynamic>;
+                        final dataB = b.data() as Map<String, dynamic>;
+
+                        // First, compare by Favorite
+                        final favoriteA = dataA['Favorite'] == true;
+                        final favoriteB = dataB['Favorite'] == true;
+                        if (favoriteA != favoriteB) {
+                          return favoriteB ? 1 : -1;
+                        }
+
+                        // Then, compare by Name
+                        final nameA = (dataA['Name'] ?? '').toLowerCase();
+                        final nameB = (dataB['Name'] ?? '').toLowerCase();
+                        return nameA.compareTo(nameB);
+                      });
 
                     return SingleChildScrollView(
                       child: ConstrainedBox(
@@ -91,7 +108,8 @@ class ViewDetailsPage extends StatelessWidget {
                           minHeight: constraints.maxHeight,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 24.0).copyWith(top: 8.0, bottom: 10.0),
+                          padding: const EdgeInsets.symmetric(horizontal: 24.0)
+                              .copyWith(top: 8.0, bottom: 10.0),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -106,10 +124,14 @@ class ViewDetailsPage extends StatelessWidget {
                               const SizedBox(height: 16.0),
                               // Pass location data to LocationCard
                               ...locations.map((location) {
-                                final data = location.data() as Map<String, dynamic>;
+                                final data =
+                                    location.data() as Map<String, dynamic>;
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: LocationCard(data: data),
+                                  child: LocationCard(
+                                    data: data,
+                                    documentSnapshot: location,
+                                  ),
                                 );
                               }).toList(),
                             ],
