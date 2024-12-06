@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../components/burger.dart'; // Import the burger menu
-import '../components/cardlocations.dart'; // Reuse the LocationCard widget
+import '../components/burger.dart'; 
+import '../components/cardlocations.dart'; 
 
 class ExtensiveDetails extends StatelessWidget {
   final Map<String, dynamic> locationData;
@@ -16,7 +16,6 @@ class ExtensiveDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     final officeName = locationData['Name'] ?? 'Unknown Office';
 
-    // Get the location's document reference from Firestore
     DocumentReference locationRef = documentSnapshot.reference;
 
     return Scaffold(
@@ -35,21 +34,21 @@ class ExtensiveDetails extends StatelessWidget {
                     Icons.menu,
                     size: MediaQuery.of(context).size.width * 0.08,
                   ),
-                  onPressed: () => Scaffold.of(context).openDrawer(), // This will open the drawer
+                  onPressed: () => Scaffold.of(context).openDrawer(), 
                 );
               },
             ),
             title: Image.asset(
-              "assets/UniCampLogo.png",  // Keep the logo as before
+              "assets/UniCampLogo.png",  
               height: MediaQuery.of(context).size.height * 0.05,
             ),
             centerTitle: true,
           ),
         ),
       ),
-      drawer: BurgerMenu.drawer(context), // Add the BurgerMenu drawer here
+      drawer: BurgerMenu.drawer(context), 
       body: StreamBuilder<DocumentSnapshot>(
-        stream: locationRef.snapshots(),  // Listen for changes in the Firestore document
+        stream: locationRef.snapshots(),  
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -61,20 +60,19 @@ class ExtensiveDetails extends StatelessWidget {
             return Center(child: Text('Location not found.'));
           }
 
-          // Get the updated location data from the snapshot
           final updatedLocationData = snapshot.data!.data() as Map<String, dynamic>;
 
           return Stack(
             children: [
               Positioned.fill(
                 child: Image.asset(
-                  "assets/Main Page.jpg",  // Background image
+                  "assets/Main Page.jpg",  
                   fit: BoxFit.cover,
                 ),
               ),
               Positioned.fill(
                 child: Container(
-                  color: Colors.black.withOpacity(0.3),  // Overlay for readability
+                  color: Colors.black.withOpacity(0.3),  
                 ),
               ),
               Padding(
@@ -86,7 +84,7 @@ class ExtensiveDetails extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 16.0, bottom: 8.0),
                       child: Text(
-                        officeName,  // Display the office name here
+                        officeName,  
                         style: TextStyle(
                           fontSize: 26.0,
                           fontWeight: FontWeight.bold,
@@ -94,12 +92,13 @@ class ExtensiveDetails extends StatelessWidget {
                         ),
                       ),
                     ),
-                    // Pass the updated data to the LocationCard widget
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: LocationCard(
-                        data: updatedLocationData,  // Updated location data with the current state
-                        documentSnapshot: snapshot.data!,
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 16.0),
+                        child: LocationCard(
+                          data: updatedLocationData,  
+                          documentSnapshot: snapshot.data!,
+                        ),
                       ),
                     ),
                   ],
