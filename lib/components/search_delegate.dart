@@ -25,7 +25,7 @@ class CustomSearchDelegate extends SearchDelegate<String> {
   // Add a new search to the list and save
   Future<void> _addSearch(String query) async {
     if (query.isNotEmpty && !previousSearches.contains(query)) {
-      previousSearches.add(query);
+      previousSearches.insert(0, query); // Insert at the top to make it most recent
       await _savePreviousSearches();
     }
   }
