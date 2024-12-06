@@ -68,9 +68,8 @@ class BuildingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final photoURLs = data['PhotoURL'] is List
-        ? List<String>.from(data['PhotoURL'])
-        : [];
+    final photoURLs =
+        data['PhotoURL'] is List ? List<String>.from(data['PhotoURL']) : [];
     final locationGeoPoint = data['Location'] as GeoPoint?;
     final location = locationGeoPoint != null
         ? '${locationGeoPoint.latitude}, ${locationGeoPoint.longitude}'
@@ -113,7 +112,11 @@ class BuildingCard extends StatelessWidget {
                               width: double.infinity,
                               fit: BoxFit.cover,
                               placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
+                                child: CircularProgressIndicator(
+                                  strokeWidth:
+                                      2.0, // Adjust the stroke width for a thinner indicator
+                                ),
+                              ),
                               errorWidget: (context, url, error) =>
                                   const Icon(Icons.error),
                             ),
@@ -135,8 +138,12 @@ class BuildingCard extends StatelessWidget {
                       height: 200.0,
                       width: double.infinity,
                       fit: BoxFit.cover,
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
+                      placeholder: (context, url) => const Center(
+                        child: CircularProgressIndicator(
+                          strokeWidth:
+                              2.0, // Adjust the stroke width for a thinner indicator
+                        ),
+                      ),
                       errorWidget: (context, url, error) =>
                           const Icon(Icons.error),
                     ),

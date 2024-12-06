@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardlocations.dart';
 import '../components/burger.dart';
 import '../components/search_delegate.dart'; // Import the SearchDelegate
+import 'extensive_details.dart'; // Import the new page
 
 class LocationsPage extends StatefulWidget {
   const LocationsPage({super.key});
@@ -227,6 +228,17 @@ class _LocationsPageState extends State<LocationsPage> {
                                       location, // Pass the entire document snapshot
                                 ),
                               ),
+                              onTap: () {
+                                // Navigate to the ExtensiveDetails page with the location data
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ExtensiveDetails(
+                                        locationData: data,
+                                        documentSnapshot: location),
+                                  ),
+                                );
+                              },
                             );
                           },
                         ),
