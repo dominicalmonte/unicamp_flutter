@@ -1,8 +1,8 @@
-// viewdetails.dart
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../components/cardlocations.dart';
 import '../components/burger.dart';
+import 'extensive_details.dart'; // Import the new page
 
 class ViewDetailsPage extends StatelessWidget {
   final DocumentSnapshot building;
@@ -65,8 +65,7 @@ class ViewDetailsPage extends StatelessWidget {
                 future: FirebaseFirestore.instance
                     .collection('Locations')
                     .where('Building', isEqualTo: buildingName)
-                    .where('Visibility',
-                        isEqualTo: true) // Add visibility filter
+                    .where('Visibility', isEqualTo: true) // Add visibility filter
                     .get(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -128,9 +127,23 @@ class ViewDetailsPage extends StatelessWidget {
                                     location.data() as Map<String, dynamic>;
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 16.0),
-                                  child: LocationCard(
-                                    data: data,
-                                    documentSnapshot: location,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      // Navigate to ExtensiveDetails with the tapped location data
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ExtensiveDetails(
+                                            locationData: data,
+                                            documentSnapshot: location,
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    child: LocationCard(
+                                      data: data,
+                                      documentSnapshot: location,
+                                    ),
                                   ),
                                 );
                               }).toList(),
